@@ -41,6 +41,36 @@ func main() {
 		}).Fatal("Configuration error happen! Killing service now...")
 	}
 
+	if _, err := conf.GetOrSet("service-name", ServiceName); err != nil {
+		log.WithFields(logrus.Fields{
+			"service": "slack-invite",
+			"err":     err,
+		}).Fatal("Configuration error happen! Killing service now...")
+	}
+
+	if _, err := conf.GetOrSet("service-description", ServiceName); err != nil {
+		log.WithFields(logrus.Fields{
+			"service": "slack-invite",
+			"err":     err,
+		}).Fatal("Configuration error happen! Killing service now...")
+	}
+
+	if _, err := conf.GetOrSet("service-version", ServiceName); err != nil {
+		log.WithFields(logrus.Fields{
+			"service": "slack-invite",
+			"err":     err,
+		}).Fatal("Configuration error happen! Killing service now...")
+	}
+
+	serv, err = service.New(conf)
+
+	if err != nil {
+		log.WithFields(logrus.Fields{
+			"service": "slack-invite",
+			"err":     err,
+		}).Fatal("Service initialization error happen! Killing service now...")
+	}
+
 }
 
 func recovery() {
