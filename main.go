@@ -6,71 +6,79 @@
 package main
 
 import (
-	"os"
-
 	"github.com/Sirupsen/logrus"
 	"github.com/golanghr/platform/config"
 	"github.com/golanghr/platform/logging"
+	"github.com/golanghr/platform/server"
 	"github.com/golanghr/platform/service"
 )
 
 var (
-	log  logging.Logging
-	conf config.Manager
-	err  error
-	serv service.Service
+	log          logging.Logging
+	conf         config.Manager
+	err          error
+	serv         service.Service
+	http         server.Server
+	slog         *logrus.Entry
+	elog         *logrus.Entry
+	serviceEvent chan string
 )
 
-func init() {
-	log = logging.New(map[string]interface{}{
-		"formatter": "text",
-		"level":     logrus.DebugLevel,
-	})
-}
-
 func main() {
-	slog := log.WithFields(logrus.Fields{"service": "slack-invite"})
 	defer recovery()
 
 	slog.Debug("Hello! We are going to prepare service now ...")
 
 	if conf, err = config.New(serviceConfig); err != nil {
-		log.WithFields(logrus.Fields{
-			"service": "slack-invite",
-			"err":     err,
-		}).Fatal("Configuration error happen! Killing service now...")
+		elog.Fatal("Configuration error happen! Killing service now...")
 	}
 
+	// Just small helper located bellow main() to keep main looking ok
+	setupConfig()
+
+	if serv, err = service.New(conf); err != nil {
+		elog.Fatal("Service initialization error happen! Killing service now...")
+	}
+
+	if http, err = server.NewHTTPServer(serv); err != nil {
+		elog.Fatal("HTTP server initialization error happen! Killing service now...")
+	}
+
+	serviceEvent = make(chan string)
+	go handleServiceEventMessages(serviceEvent)
+
+	if err := http.Start(serviceEvent); err != nil {
+		elog.Fatal("HTTP server startup error happen! Killing service now...")
+	}
+}
+
+func handleServiceEventMessages(se chan string) {
+	for {
+		event := <-se
+
+		if event == server.STARTING {
+			slog.Warning("Starting up HTTP/HTTPS service now ...")
+		}
+
+	}
+}
+
+func setupConfig() {
 	if _, err := conf.GetOrSet("service-name", ServiceName); err != nil {
-		log.WithFields(logrus.Fields{
-			"service": "slack-invite",
-			"err":     err,
-		}).Fatal("Configuration error happen! Killing service now...")
+		elog.Fatal("Configuration error happen! Killing service now...")
 	}
 
 	if _, err := conf.GetOrSet("service-description", ServiceName); err != nil {
-		log.WithFields(logrus.Fields{
-			"service": "slack-invite",
-			"err":     err,
-		}).Fatal("Configuration error happen! Killing service now...")
+		elog.Fatal("Configuration error happen! Killing service now...")
 	}
 
 	if _, err := conf.GetOrSet("service-version", ServiceName); err != nil {
-		log.WithFields(logrus.Fields{
-			"service": "slack-invite",
-			"err":     err,
-		}).Fatal("Configuration error happen! Killing service now...")
+		elog.Fatal("Configuration error happen! Killing service now...")
 	}
 
-	serv, err = service.New(conf)
-
-	if err != nil {
-		log.WithFields(logrus.Fields{
-			"service": "slack-invite",
-			"err":     err,
-		}).Fatal("Service initialization error happen! Killing service now...")
+	if _, err := conf.GetOrSet("server-http-tls", "yes"); err != nil {
+		elog.Fatal("Configuration error happen! Killing service now...")
 	}
-
 }
 
 func recovery() {
@@ -78,11 +86,19 @@ func recovery() {
 
 	if err != nil {
 		log.WithFields(logrus.Fields{
-			"service": "slack-invite",
+			"service": ServiceName,
 			"err":     err,
 		}).Fatal("Panic happen! Killing service now...")
-
-		// Exit under critical conditions
-		os.Exit(2)
 	}
+}
+
+// init - used to setup logger
+func init() {
+	log = logging.New(map[string]interface{}{
+		"formatter": "text",
+		"level":     logrus.DebugLevel,
+	})
+
+	slog = log.WithFields(logrus.Fields{"service": ServiceName})
+	elog = log.WithFields(logrus.Fields{"service": ServiceName, "err": err})
 }
