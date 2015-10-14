@@ -18,7 +18,6 @@ var (
 
 	logger logging.Logging
 	log    *logrus.Entry
-	errlog *logrus.Entry
 
 	slackinvite *SlackInvite
 )

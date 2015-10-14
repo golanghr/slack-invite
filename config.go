@@ -31,9 +31,12 @@ var (
 		},
 	}
 
-	ServiceName        = utils.GetFromEnvOr("SERVICE_SLACK_NAME", "Slack Invite")
-	ServiceDescription = utils.GetFromEnvOr("SERVICE_SLACK_DESCRIPTION", "Golang.hr Slack Invite is a small automation service written on top of Golang.hr Platform.")
-	ServiceVersion     = utils.GetFromEnvOr("SERVICE_SLACK_VERSION", "0.0.1a")
+	ServiceName          = utils.GetFromEnvOr("SERVICE_SLACK_NAME", "Slack Invite")
+	ServiceDescription   = utils.GetFromEnvOr("SERVICE_SLACK_DESCRIPTION", "Golang.hr Slack Invite is a small automation service written on top of Golang.hr Platform.")
+	ServiceVersion       = utils.GetFromEnvOr("SERVICE_SLACK_VERSION", "0.0.1a")
+	ServiceAddr          = utils.GetFromEnvOr("SERVICE_SLACK_SERVER_ADDR", ":4010")
+	ServiceServerTimeout = utils.GetFromEnvOr("SERVICE_SLACK_SERVER_TIMEOUT", "30")
 
-	ServiceUseTLS = utils.GetFromEnvOr("SERVICE_SLACK_USE_TLS", "true")
+	ServiceUseTLS  = utils.GetFromEnvOr("SERVICE_SLACK_USE_TLS", "false")
+	ServiceTLSPort = utils.GetFromEnvOr("SERVICE_SLACK_TLS_PORT", "10433")
 )
