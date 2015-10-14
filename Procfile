@@ -1,0 +1,1 @@
+slackinvite: bin/slack-invite

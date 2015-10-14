@@ -30,4 +30,10 @@ var (
 			"header_timeout_per_request": time.Second,
 		},
 	}
+
+	ServiceName        = utils.GetFromEnvOr("SERVICE_SLACK_NAME", "Slack Invite")
+	ServiceDescription = utils.GetFromEnvOr("SERVICE_SLACK_DESCRIPTION", "Golang.hr Slack Invite is a small automation service written on top of Golang.hr Platform.")
+	ServiceVersion     = utils.GetFromEnvOr("SERVICE_SLACK_VERSION", "0.0.1a")
+
+	ServiceUseTLS = utils.GetFromEnvOr("SERVICE_SLACK_USE_TLS", "true")
 )

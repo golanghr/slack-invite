@@ -5,4 +5,9 @@
 // Package main ...
 package main
 
-var ()
+import "github.com/Sirupsen/logrus"
+
+// LogFatalError -
+func LogFatalError(err error, additional string) {
+	logger.WithFields(logrus.Fields{"service": ServiceName, "err": err}).Fatal(additional)
+}

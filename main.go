@@ -30,7 +30,6 @@ func init() {
 	})
 
 	log = logger.WithFields(logrus.Fields{"service": ServiceName})
-	errlog = logger.WithFields(logrus.Fields{"service": ServiceName, "err": err})
 }
 
 func main() {
@@ -39,13 +38,13 @@ func main() {
 	runtime.GOMAXPROCS(utils.GetProcessCount("SLACK_INVITE_PROCESS_COUNT"))
 
 	if slackinvite, err = NewSlackInvite(serviceCnf); err != nil {
-		errlog.Fatal("Service establishment error occurred. Terminating service now...")
+		LogFatalError(err, "Service establishment error occurred. Terminating service now...")
 	}
 
 	defer slackinvite.Recover()
 
 	if err = slackinvite.Run(); err != nil {
-		errlog.Fatal("Service runtime error occurred. Terminating service now...")
+		LogFatalError(err, "Service runtime error occurred. Terminating service now...")
 	}
 
 }

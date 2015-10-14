@@ -7,6 +7,7 @@ package main
 
 import (
 	"github.com/golanghr/platform/config"
+	"github.com/golanghr/platform/server"
 	"github.com/golanghr/platform/service"
 )
 
@@ -14,6 +15,9 @@ import (
 type SlackInvite struct {
 	config.Manager
 	service.Service
+	server.Server
+
+	Quit chan bool
 }
 
 // LoadConfiguration -
@@ -38,6 +42,10 @@ func (si *SlackInvite) LoadConfiguration(cnf map[string]interface{}) error {
 		return err
 	}
 
+	if err := si.Manager.EnsureSet("use-tls", ServiceUseTLS); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -46,6 +54,25 @@ func (si *SlackInvite) LoadService() (err error) {
 	log.Debug("Starting service management ...")
 
 	if si.Service, err = service.New(si.Manager); err != nil {
+		return
+	}
+
+	return
+}
+
+// LoadWebServer -
+func (si *SlackInvite) LoadWebServer() (err error) {
+	log.Debug("Starting HTTP/TLS server management ...")
+
+	var supportTLS bool
+
+	if supportTLS, err = si.Manager.GetBool("use-tls"); err != nil {
+		return
+	}
+
+	if si.Server, err = server.NewHTTPServer(si, &server.Options{
+		TLS: supportTLS,
+	}); err != nil {
 		return
 	}
 
@@ -62,19 +89,25 @@ func (si *SlackInvite) Run() (err error) {
 // Recover -
 func (si *SlackInvite) Recover() {
 	if err := recover(); err != nil {
-		errlog.Fatal("Panic happen! Killing service now...")
+		LogFatalError(err.(error), "Panic happen! Killing service now...")
 	}
 }
 
 // NewSlackInvite -
 func NewSlackInvite(cnf map[string]interface{}) (*SlackInvite, error) {
-	slackinvite := new(SlackInvite)
+	slackinvite := &SlackInvite{
+		Quit: make(chan bool),
+	}
 
 	if err := slackinvite.LoadConfiguration(cnf); err != nil {
 		return nil, err
 	}
 
 	if err := slackinvite.LoadService(); err != nil {
+		return nil, err
+	}
+
+	if err := slackinvite.LoadWebServer(); err != nil {
 		return nil, err
 	}
 
