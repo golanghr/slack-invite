@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	serviceConfig = map[string]interface{}{
+	serviceCnf = map[string]interface{}{
 		"env":                utils.GetFromEnvOr("SERVICE_SLACK_INVITE_ENV", "sandbox"),
 		"folder":             utils.GetFromEnvOr("SERVICE_SLACK_INVITE_ETCD_FOLDER", "golanghr/slack-invite"),
 		"auto_sync":          true,
