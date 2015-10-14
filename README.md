@@ -72,4 +72,4 @@ SOFTWARE.
 [Golang.hr Slack]: <http://slack.golang.hr>
 [Golang.hr Facebook]: <https://www.facebook.com/groups/golanghr/>
 
-[Golang.hr]: <https://slack.com/>
+[slack]: <https://slack.com/>
