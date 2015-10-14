@@ -1,0 +1,30 @@
+{
+  "name": "slack-invite",
+  "version": "0.0.1",
+  "homepage": "https://github.com/golanghr/slack-invite",
+  "authors": [
+    "Nevio Vesic <nevio.vesic@gmail.com>"
+  ],
+  "description": "Golang.hr Slack Invite is a small automation service written on top of Golang.hr Platform.",
+  "main": "",
+  "moduleType": [
+    "es6"
+  ],
+  "keywords": [
+    "slack",
+    "golang"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "assets/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4"
+  }
+}

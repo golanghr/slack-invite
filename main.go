@@ -39,4 +39,8 @@ func main() {
 
 	defer slackinvite.Recover()
 
+	if err = slackinvite.Run(); err != nil {
+		errlog.Fatal("Service runtime error occurred. Terminating service now...")
+	}
+
 }

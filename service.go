@@ -30,11 +30,11 @@ func (si *SlackInvite) LoadConfiguration(cnf map[string]interface{}) error {
 		return err
 	}
 
-	if err := si.Manager.EnsureSet("service-description", ServiceName); err != nil {
+	if err := si.Manager.EnsureSet("service-description", ServiceDescription); err != nil {
 		return err
 	}
 
-	if err := si.Manager.EnsureSet("service-version", ServiceName); err != nil {
+	if err := si.Manager.EnsureSet("service-version", ServiceVersion); err != nil {
 		return err
 	}
 
@@ -48,6 +48,13 @@ func (si *SlackInvite) LoadService() (err error) {
 	if si.Service, err = service.New(si.Manager); err != nil {
 		return
 	}
+
+	return
+}
+
+// Run -
+func (si *SlackInvite) Run() (err error) {
+	log.Warn("Starting service ...")
 
 	return
 }
