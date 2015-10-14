@@ -6,8 +6,11 @@
 package main
 
 import (
+	"runtime"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/golanghr/platform/logging"
+	"github.com/golanghr/platform/utils"
 )
 
 var (
@@ -32,6 +35,8 @@ func init() {
 
 func main() {
 	log.Debug("Hello! We are going to nuke service now ...")
+
+	runtime.GOMAXPROCS(utils.GetProcessCount("SLACK_INVITE_PROCESS_COUNT"))
 
 	if slackinvite, err = NewSlackInvite(serviceCnf); err != nil {
 		errlog.Fatal("Service establishment error occurred. Terminating service now...")
