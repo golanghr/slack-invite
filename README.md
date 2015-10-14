@@ -12,6 +12,9 @@ Point of the service is for you to be able quickly setup and run [slack] invitat
 that will send out invitation email to the customer if he's not already registered under
 your team.
 
+### Demo?
+
+Well that's easy :) You can see it here [slack.golang.hr]
 
 ### Installing Service
 
@@ -73,3 +76,4 @@ SOFTWARE.
 [Golang.hr Facebook]: <https://www.facebook.com/groups/golanghr/>
 
 [slack]: <https://slack.com/>
+[slack.golang.hr]: <http://slack.golang.hr>
