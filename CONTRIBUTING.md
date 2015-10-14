@@ -74,8 +74,6 @@ contribute.
 1. Each and every single line of the code you wish to submit must come with
    valid and working **tests**
 
-### Sign your work
-
 **We do accept GitHub pull requests**
 
 Unless otherwise noted, the Golang.hr source files are distributed under
