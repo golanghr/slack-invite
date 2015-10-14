@@ -20,7 +20,7 @@ The gophers there will answer or ask you to file an issue if you've tripped over
 
 The sign-off is a simple line at the end of the explanation for the patch.
 Your signature certifies that you wrote the patch or otherwise have the right to pass it on as an open-source patch.
-The rules are pretty simple: if you can certify the below (from developercertificate.org):
+The rules are pretty simple: if you can certify the below (from [developercertificate.org]):
 
 ```
 Developer Certificate of Origin
