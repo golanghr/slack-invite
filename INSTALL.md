@@ -24,3 +24,7 @@ That's about it! You now have as etcd README says
 This will bring up 3 etcd members infra1, infra2 and infra3 and etcd proxy proxy, which runs locally and composes a cluster.
 You can write a key to the cluster and retrieve the value back from any member or proxy.
 ```
+
+[Golang.hr]: <https://github.com/golanghr>
+[Golang.hr Slack Invite]: <https://github.com/golanghr/slack-invite>
+[Golang.hr Platform]: <https://github.com/golanghr/platform>
