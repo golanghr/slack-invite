@@ -3,10 +3,11 @@
 **STILL WORK IN PROGRESS**
 
 ## Requirements
+----
 
 Before we even start with anything related to installation, here's what you need to have.
 
-### [Go] Required
+#### [Go] Required
 
 You will need to have [Go] 1.4+ installed and ready for use.
 
@@ -14,7 +15,7 @@ If you're unsure how to do it or need any sort of help, please navigate yourself
 [Go Getting Started]. Go team explained very nicely what you need to do depending on your
 environment.
 
-### [Etcd] Required
+#### [Etcd] Required
 
 Yes, yes! We're limiting stuff. I know, that's not good but as [Golang.hr] wants one day to
 have it's own services, it's logical that we have configuration management on one place that's
@@ -24,19 +25,20 @@ In order to install [Etcd] please go to [Etcd Git] and read through their README
 
 
 ## Installation
+----
 
 I'm sorry but in this moment I have no idea how to set it up on Windows. In fact, I've never used
 [Go] on Windows so please, if you did and have will to help us out, add it and make pull request :)
 
 Installation for rest of the world should be similar if not the same.
 
-### From Source
+#### From Source
 
 ```sh
 
 ```
 
-### Docker Image
+#### Docker Image
 
 ```sh
 
