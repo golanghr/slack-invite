@@ -1,6 +1,5 @@
 [![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/golanghr/slack-invite/tree/master/LICENSE)
 [![Build Status](https://travis-ci.org/golanghr/slack-invite.svg)](https://travis-ci.org/golanghr/slack-invite)
-[![Go 1.3 Ready](https://img.shields.io/badge/Go%201.3-Ready-green.svg?style=flat)]()
 [![Go 1.4 Ready](https://img.shields.io/badge/Go%201.4-Ready-green.svg?style=flat)]()
 [![Go 1.5 Ready](https://img.shields.io/badge/Go%201.5-Ready-green.svg?style=flat)]()
 
