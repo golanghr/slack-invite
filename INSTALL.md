@@ -1,6 +1,10 @@
 # [Golang.hr] Slack Invite Installation Guide
 
-**TBD**
+**STILL WORK IN PROGRESS**
+
+## Requirements
+
+Before we even start with anything related to installation, here's what you need to have.
 
 ### [Go] Required
 
@@ -19,6 +23,25 @@ resilient and just works. Due to that, you'll have to bring up [Etcd] instance i
 In order to install [Etcd] please go to [Etcd Git] and read through their README
 
 
+## Installation
+
+I'm sorry but in this moment I have no idea how to set it up on Windows. In fact, I've never used
+[Go] on Windows so please, if you did and have will to help us out, add it and make pull request :)
+
+Installation for rest of the world should be similar if not the same.
+
+### From Source
+
+```sh
+
+```
+
+### Docker Image
+
+```sh
+
+```
+
 
 
 [Golang.hr]: <https://github.com/golanghr>
@@ -29,4 +52,4 @@ In order to install [Etcd] please go to [Etcd Git] and read through their README
 [Etcd Git]: <https://github.com/coreos/etcd>
 
 [Go]: <http://golang.org/>
-[Go Getting Started]: <>
+[Go Getting Started]: <https://golang.org/doc/install>
