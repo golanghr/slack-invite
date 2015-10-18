@@ -6,11 +6,12 @@
 package main
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/golanghr/platform/config"
-	"github.com/golanghr/platform/server"
 	"github.com/golanghr/platform/service"
+	"github.com/gorilla/mux"
 )
 
 // SlackInvite -
@@ -19,10 +20,15 @@ type SlackInvite struct {
 
 	Config config.Manager
 
-	Server    *server.Server
-	ServerTLS *server.Server
+	Server  *http.Server
+	Handler *mux.Router
 
 	Quit chan bool
+}
+
+// AddHandler -
+func (si *SlackInvite) AddHandler(handler *mux.Router) {
+	si.Handler = handler
 }
 
 // LoadConfiguration - Will basically ensure that service defaults are set and that
@@ -34,9 +40,9 @@ func (si *SlackInvite) LoadConfiguration(cnf map[string]interface{}) error {
 		"service-name":        ServiceName,
 		"service-description": ServiceDescription,
 		"service-version":     ServiceVersion,
-		"use-tls":             ServiceUseTLS,
 		"addr":                ServiceAddr,
-		"timeout":             ServiceServerTimeout,
+		"read_timeout":        ServiceReadTimeout,
+		"write_timeout":       ServiceWriteTimeout,
 	}
 
 	if err := si.Config.EnsureSetMany(cm); err != nil {
@@ -52,62 +58,34 @@ func (si *SlackInvite) LoadConfiguration(cnf map[string]interface{}) error {
 	return nil
 }
 
-// LoadWebServer -
-func (si *SlackInvite) LoadWebServer() (err error) {
-	log.Debug("Preparing HTTP/TLS server ...")
-
+// Run -
+func (si *SlackInvite) Run() (err error) {
 	var addr string
-	var timeout time.Duration
+	var rTimeout time.Duration
+	var wTimeout time.Duration
 
 	if addr, err = si.Config.GetString("addr"); err != nil {
 		return
 	}
 
-	if timeout, err = si.Config.GetDuration("timeout"); err != nil {
+	if rTimeout, err = si.Config.GetDuration("read_timeout"); err != nil {
 		return
 	}
 
-	handler := server.Handler{}
-
-	si.Server = server.NewServer(si, &server.Options{
-		Timeout: timeout * time.Second,
-		Addr:    addr,
-	}, handler)
-
-	si.ServerTLS = server.NewServerTLS(si, &server.Options{
-		Timeout: 10 * time.Second,
-		Addr:    addr,
-	}, handler)
-
-	return
-}
-
-// Run -
-func (si *SlackInvite) Run() (err error) {
-	log.Warn("Starting service ...")
-
-	// Start HTTP and TLS separatedly instead of Server.Start()
-	// Use locking here so we wait for http to start, wait for tls to start
-	// and than we consider it as done so error or really anything else
-
-	if err = si.Server.ListenAndServe(); err != nil {
+	if wTimeout, err = si.Config.GetDuration("write_timeout"); err != nil {
 		return
 	}
 
-	if err = si.ServerTLS.ListenAndServe(); err != nil {
-		return
+	log.Warnf("Starting HTTP service on (addr: %s) ...", addr)
+
+	si.Server = &http.Server{
+		Addr:         addr,
+		Handler:      si.Handler,
+		ReadTimeout:  rTimeout * time.Second,
+		WriteTimeout: wTimeout * time.Second,
 	}
 
-	return
-}
-
-// Recover - Will just capture recover error and log it as fatal.
-// we will still kill the service as it paniced and service should never ever
-// panic and be considered as "ok"
-func (si *SlackInvite) Recover() {
-	if err := recover(); err != nil {
-		LogFatalError(err.(error), "Panic happen! Killing service now...")
-	}
+	return si.Server.ListenAndServe()
 }
 
 // NewSlackInvite -
@@ -131,10 +109,6 @@ func NewSlackInvite(cnf map[string]interface{}) (*SlackInvite, error) {
 	}
 
 	if err := slackinvite.LoadConfiguration(cnf); err != nil {
-		return nil, err
-	}
-
-	if err := slackinvite.LoadWebServer(); err != nil {
 		return nil, err
 	}
 

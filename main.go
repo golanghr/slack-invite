@@ -6,11 +6,13 @@
 package main
 
 import (
+	"net/http"
 	"runtime"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/golanghr/platform/logging"
 	"github.com/golanghr/platform/utils"
+	"github.com/gorilla/mux"
 )
 
 var (
@@ -40,10 +42,18 @@ func main() {
 		LogFatalError(err, "Service establishment error occurred. Terminating service now...")
 	}
 
-	defer slackinvite.Recover()
+	handler := mux.NewRouter()
 
-	if err = slackinvite.Run(); err != nil {
-		LogFatalError(err, "Service runtime error occurred. Terminating service now...")
+	handler.HandleFunc("/", IndexHandler).Name("index")
+
+	// Static files handling
+	s := http.StripPrefix("/static/", http.FileServer(http.Dir("./assets/")))
+	handler.PathPrefix("/static/").Handler(s)
+
+	slackinvite.AddHandler(handler)
+
+	if err := slackinvite.Run(); err != nil {
+		LogFatalError(err, "Service runtime error occurred.")
 	}
 
 }
