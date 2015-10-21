@@ -35,7 +35,17 @@ Installation for rest of the world should be similar if not the same.
 #### From Source
 
 ```sh
+# Write to the .profile
+export SERVICE_SLACK_NAME="Slack Invite"
+export SERVICE_SLACK_DESCRIPTION="Golang.hr Slack Invite is a small automation service written on top of Golang.hr Platform."
+export SERVICE_SLACK_VERSION="0.0.1a"
+export SERVICE_SLACK_SERVER_ADDR=":4010"
 
+go get -u github.com/golanghr/slack-invite
+
+# This is just dirty way of how to run it. For something more sophisticated you'll need to
+# user or systemd or supervisor or upstart or something else.
+./slack-invite
 ```
 
 #### Docker Image

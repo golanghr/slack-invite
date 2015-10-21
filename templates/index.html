@@ -1,5 +1,73 @@
 {{template "header.html" .}}
 
-<h1>Welcome to slack...</h1>
+<div class="container-fluid">
+  <main class="row">
+    <aside class="col-md-3 col-md-push-9">
+
+      <div class="row">
+
+        <p class="description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+          dolore eu fugiat nulla pariatur.
+        </p>
+        <br />
+        <form action="" method="POST">
+
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" class="form-control" id="first_name" placeholder="John">
+          </div>
+
+          <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" class="form-control" id="last_name" placeholder="Doe">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" placeholder="john@doe.com">
+          </div>
+
+          <button type="submit" class="btn btn-success">Request Invitation</button>
+        </form>
+      </div>
+
+    </aside>
+    <article class="col-md-9 col-md-pull-3">
+      <h1>Join <strong>{team-name}</strong> Slack Community</h1>
+      <p class="description">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+        dolore eu fugiat nulla pariatur.
+      </p>
+
+      <div class="panel panel-default col-md-3">
+        <div class="panel-body">
+            <i class="fa fa-user fa-5x"></i>
+            <h3>{count}</h3>
+            <p>Currently Online Users</p>
+        </div>
+      </div>
+
+      <div class="panel panel-default col-md-3">
+        <div class="panel-body">
+            <i class="fa fa-users fa-5x"></i>
+            <h3>{count}</h3>
+            <p>Total Registered Users</p>
+        </div>
+      </div>
+
+      <div class="panel panel-default col-md-3">
+        <div class="panel-body">
+          <i class="fa fa-commenting-o fa-5x"></i>
+          <h3>{count}</h3>
+          <p>Active Channels</p>
+        </div>
+      </div>
+      <p class="copyright">&copy; {year} {teamname}. All rights reserved.</p>
+    </article>
+  </main>
+</div>
 
 {{template "footer.html" .}}

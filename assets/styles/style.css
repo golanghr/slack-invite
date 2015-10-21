@@ -1,0 +1,43 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+article {
+  height: 100vh;
+  padding:20px;
+}
+
+article h1{
+  font-size: 3em;
+  color: #333;
+}
+
+article p.description {
+  font-size: 1.5em;
+  color: #333;
+}
+
+article div.panel{
+  margin-top:20px;
+  margin-right:10px;
+}
+
+article div.panel .panel-body .fa{
+  float: left;
+  margin-top:10px;
+  margin-right:10px;
+}
+
+article p.copyright{
+  clear:both;
+  display: block;
+  padding-top: 50px;
+}
+
+aside .row {
+  height: 100vh;
+  border-left: 3px #f1f1f1 solid !important;
+  padding:20px;
+
+  padding-top:10vh;
+}
