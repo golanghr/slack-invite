@@ -1,10 +1,12 @@
 body {
     font-family: 'Open Sans', sans-serif;
+    background-color: #EEEEEE;
 }
 
 article {
   height: 100vh;
   padding:20px;
+  border:1px #ccc solid;
 }
 
 article h1{
@@ -13,13 +15,12 @@ article h1{
 }
 
 article p.description {
-  font-size: 1.5em;
+  font-size: 1.2em;
   color: #333;
 }
 
 article div.panel{
   margin-top:20px;
-  margin-right:10px;
 }
 
 article div.panel .panel-body .fa{
