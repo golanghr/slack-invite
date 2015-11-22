@@ -37,7 +37,10 @@ func (m *SlackInviteRequest) String() string { return proto.CompactTextString(m)
 func (*SlackInviteRequest) ProtoMessage()    {}
 
 type SlackInvite struct {
-	Message string `protobuf:"bytes,1,opt,name=message" json:"message,omitempty"`
+	Active []string `protobuf:"bytes,1,rep,name=Active" json:"Active,omitempty"`
+	Away   []string `protobuf:"bytes,2,rep,name=Away" json:"Away,omitempty"`
+	Admins []string `protobuf:"bytes,3,rep,name=Admins" json:"Admins,omitempty"`
+	Total  int64    `protobuf:"varint,4,opt,name=Total" json:"Total,omitempty"`
 }
 
 func (m *SlackInvite) Reset()         { *m = SlackInvite{} }

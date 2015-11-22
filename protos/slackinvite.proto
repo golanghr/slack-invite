@@ -8,7 +8,10 @@ message SlackInviteRequest {
 }
 
 message SlackInvite {
-  string message = 1;
+  repeated string Active = 1;
+  repeated string Away = 2;
+  repeated string Admins = 3;
+  int64 Total = 4;
 }
 
 service Slack {

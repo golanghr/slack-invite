@@ -27,6 +27,7 @@ SOFTWARE.
 package main
 
 import (
+	"errors"
 	"syscall"
 
 	"github.com/golanghr/platform/handlers"
@@ -60,6 +61,9 @@ type Service struct {
 
 	// Logging -
 	*logging.Entry
+
+	// Slack -
+	*Slack
 }
 
 // GrpcServer - Will return back actual grpc.Server
@@ -82,6 +86,18 @@ func NewService(opts options.Options, logger *logging.Entry) (*Service, error) {
 
 	if err != nil {
 		return nil, err
+	}
+
+	slackToken, ok := opts.Get("slack-token")
+
+	if !ok {
+		return nil, errors.New("You need to provide slack token in order to start service...")
+	}
+
+	slackApiDebug, ok := opts.Get("slack-api-debug")
+
+	if !ok {
+		return nil, errors.New("You need to provide `slack-api-debug` in order to start service...")
 	}
 
 	grpcServer, err := servers.NewGrpcServer(serv, opts, logger)
@@ -119,6 +135,7 @@ func NewService(opts options.Options, logger *logging.Entry) (*Service, error) {
 		HTTP:      httpServer,
 		Entry:     logger,
 		Managerer: serviceManager,
+		Slack:     NewSlack(slackToken.String(), slackApiDebug.Bool()),
 	}
 
 	pb.RegisterSlackServer(sc.GrpcServer(), sc)

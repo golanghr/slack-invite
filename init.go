@@ -27,10 +27,6 @@ SOFTWARE.
 package main
 
 import (
-	"io/ioutil"
-	"os"
-	"strings"
-
 	"github.com/Sirupsen/logrus"
 	"github.com/golanghr/platform/logging"
 	"github.com/golanghr/platform/options"
@@ -46,13 +42,13 @@ func init() {
 	// We will rewrite service SSL options here as we do not want to expose SSL
 	// certificates to the WWW. Additionally, it's the bad practice to have such details
 	// available within private repos too.
-	if err := ioutil.WriteFile(SSL_CERT_FILE, []byte(strings.Replace(os.Getenv("SSL_CERT"), "\\n", "\n", -1)), 0755); err != nil {
-		log.Fatalf("Failed to write SSL cert file: %s", err)
-	}
+	//if err := ioutil.WriteFile(SSL_CERT_FILE, []byte(strings.Replace(os.Getenv("SSL_CERT"), "\\n", "\n", -1)), 0755); err != nil {
+	//	log.Fatalf("Failed to write SSL cert file: %s", err)
+	//}
 
-	if err := ioutil.WriteFile(SSL_KEY_FILE, []byte(strings.Replace(os.Getenv("SSL_KEY"), "\\n", "\n", -1)), 0755); err != nil {
-		log.Fatalf("Failed to write SSL key file: %s", err)
-	}
+	//if err := ioutil.WriteFile(SSL_KEY_FILE, []byte(strings.Replace(os.Getenv("SSL_KEY"), "\\n", "\n", -1)), 0755); err != nil {
+	//	log.Fatalf("Failed to write SSL key file: %s", err)
+	//}
 
 	serviceOptions["grpc-tls-cert"] = SSL_CERT_FILE
 	serviceOptions["grpc-tls-key"] = SSL_KEY_FILE

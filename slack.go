@@ -27,27 +27,69 @@ SOFTWARE.
 package main
 
 import (
-	"github.com/golanghr/platform/logging"
-	"github.com/golanghr/platform/options"
+	"github.com/golanghr/slack"
+	pb "github.com/golanghr/slack-invite/protos"
 )
 
-var (
-	log    logging.Logging
-	logger *logging.Entry
-	srv    *Service
-	opts   options.Options
-)
+/**
+type Team struct {
+	Ok bool
+}
+**/
 
-func main() {
-	logger.Info("Starting service ...")
+// Slack - Just small wrapper on top of existing slack api.
+type Slack struct {
+	*slack.Client
 
-	srv, err := NewService(opts, logger)
+	Token string
+	Debug bool
 
-	if err != nil {
-		logger.Fatalf("Could not create service. (err: %s)", err)
+	Users []slack.User
+}
+
+// GetSlackInvitePb -
+func (s *Slack) GetSlackInvitePb() (*pb.SlackInvite, error) {
+	var err error
+
+	if s.Users, err = s.GetUsers("1"); err != nil {
+		return nil, err
 	}
 
-	if err := srv.Start(); err != nil {
-		logger.Fatalf("Failed to start service. (err: %s)", err)
+	active := []string{}
+	away := []string{}
+	admins := []string{}
+
+	for _, user := range s.Users {
+		if user.Presence == "active" {
+			active = append(active, user.RealName)
+		}
+
+		if user.Presence == "away" {
+			away = append(away, user.RealName)
+		}
+
+		if user.IsAdmin {
+			admins = append(admins, user.RealName)
+		}
+	}
+
+	return &pb.SlackInvite{
+		Active: active,
+		Away:   away,
+		Admins: admins,
+		Total:  int64(len(s.Users)),
+	}, nil
+}
+
+// NewSlack -
+func NewSlack(token string, debug bool) *Slack {
+
+	api := slack.New(token)
+	api.SetDebug(debug)
+
+	return &Slack{
+		Client: api,
+		Token:  token,
+		Debug:  debug,
 	}
 }

@@ -45,10 +45,10 @@ var (
 		"grpc-addr":                      utils.GetFromEnvOr("SLACK_SERVICE_GRPC_ADDR", ":4772"),
 		"grpc-tls":                       getBool(utils.GetFromEnvOr("SLACK_SERVICE_GRPC_TLS", "true")),
 		"grpc-tls-domain":                utils.GetFromEnvOr("SLACK_SERVICE_GRPC_TLS_DOMAIN", "golang.hr"),
-		"grpc-tls-cert":                  utils.GetFromEnvOr("SLACK_SERVICE_GRPC_TLS_CERT", "test_data/server.crt"),
-		"grpc-tls-key":                   utils.GetFromEnvOr("SLACK_SERVICE_GRPC_TLS_KEY", "test_data/server.key"),
 		"http-addr":                      utils.GetFromEnvOr("SLACK_SERVICE_HTTP_ADDR", ":8500"),
 		"http-listen-forever":            getBool(utils.GetFromEnvOr("SLACK_SERVICE_HTTP_LISTEN_FOREVER", "true")),
+		"slack-token":                    utils.GetFromEnvOr("SLACK_TOKEN", ""),
+		"slack-api-debug":                getBool(utils.GetFromEnvOr("SLACK_API_DEBUG", "true")),
 	}
 )
 
@@ -66,40 +66,3 @@ func getInt(val string) int {
 	i, _ := strconv.Atoi(val)
 	return i
 }
-
-/**
-var (
-	serviceCnf = map[string]interface{}{
-		"env":                utils.GetFromEnvOr("SERVICE_SLACK_INVITE_ENV", "sandbox"),
-		"folder":             utils.GetFromEnvOr("SERVICE_SLACK_INVITE_ETCD_FOLDER", "golanghr/slack-invite"),
-		"auto_sync":          true,
-		"auto_sync_interval": 10 * time.Second,
-		"etcd": map[string]interface{}{
-			"version": "v2",
-			"endpoints": []string{
-				utils.GetFromEnvOr("SERVICE_SLACK_INVITE_ETCD_ENDPOINT_PRIMARY", "http://localhost:2379"),
-				utils.GetFromEnvOr("SERVICE_SLACK_INVITE_ETCD_ENDPOINT_SECONDARY", "http://localhost:2379"),
-			},
-			"transport":                  etcd.DefaultTransport,
-			"username":                   utils.GetFromEnvOr("SERVICE_SLACK_INVITE_ETCD_USERNAME", ""),
-			"password":                   utils.GetFromEnvOr("SERVICE_SLACK_INVITE_ETCD_PASSWORD", ""),
-			"header_timeout_per_request": time.Second,
-		},
-	}
-
-	ServiceName         = utils.GetFromEnvOr("SERVICE_SLACK_NAME", "Slack Invite")
-	ServiceDescription  = utils.GetFromEnvOr("SERVICE_SLACK_DESCRIPTION", "Golang.hr Slack Invite is a small automation service written on top of Golang.hr Platform.")
-	ServiceVersion      = utils.GetFromEnvOr("SERVICE_SLACK_VERSION", "0.0.1a")
-	ServiceAddr         = utils.GetFromEnvOr("SERVICE_SLACK_SERVER_ADDR", ":4010")
-	ServiceReadTimeout  = utils.GetFromEnvOr("SERVICE_SLACK_SERVER_READ_TIMEOUT", "30")
-	ServiceWriteTimeout = utils.GetFromEnvOr("SERVICE_SLACK_SERVER_WRITE_TIMEOUT", "30")
-
-	staticDirectory = "./assets"
-	staticPaths     = map[string]string{
-		"styles":     staticDirectory + "/styles/",
-		"components": staticDirectory + "/components/",
-		"images":     staticDirectory + "/images/",
-		"scripts":    staticDirectory + "/scripts/",
-	}
-)
-**/
