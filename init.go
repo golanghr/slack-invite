@@ -37,8 +37,8 @@ import (
 )
 
 const (
-	SSL_CERT_FILE = "/tmp/slack_invite_ssl_cert"
-	SSL_KEY_FILE  = "/tmp/slack_invite_ssl_key"
+	SSL_CERT_FILE = "/tmp/certs/server.crt"
+	SSL_KEY_FILE  = "/tmp/certs/server.key"
 )
 
 func init() {
