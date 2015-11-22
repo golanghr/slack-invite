@@ -8,7 +8,6 @@ go:
 install:
   - go get -v "github.com/golanghr/platform"
   - go get -v "golang.org/x/net/context"
-  - go get -v "github.com/coreos/etcd/client"
   - go get -v "github.com/Sirupsen/logrus"
   - go get -v "github.com/smartystreets/goconvey/convey"
   - go get -v "github.com/gorilla/mux"

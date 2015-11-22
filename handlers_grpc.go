@@ -27,27 +27,13 @@ SOFTWARE.
 package main
 
 import (
-	"github.com/golanghr/platform/logging"
-	"github.com/golanghr/platform/options"
+	pb "github.com/golanghr/slack-invite/protos"
+	"golang.org/x/net/context"
 )
 
-var (
-	log    logging.Logging
-	logger *logging.Entry
-	hello  *Service
-	opts   options.Options
-)
-
-func main() {
-	logger.Info("Starting service ...")
-
-	hello, err := NewService(opts, logger)
-
-	if err != nil {
-		logger.Fatalf("Could not create service. (err: %s)", err)
-	}
-
-	if err := hello.Start(); err != nil {
-		logger.Fatalf("Failed to start service. (err: %s)", err)
-	}
+// TeamDetails - Depending on server type (http, grpc, ...) will return back new simple response.
+// If this is HTTP, it will return back application/json with HelloWorld being serialized into json
+// If this is GRPC, it will return back entire hello.HelloWorld as bytes
+func (s *Service) TeamDetails(ctx context.Context, in *pb.SlackInviteRequest) (*pb.SlackInvite, error) {
+	return &pb.SlackInvite{}, nil
 }

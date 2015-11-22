@@ -91,3 +91,4 @@ node_modules
 
 # Slack Invite
 slack-invite
+.tags*

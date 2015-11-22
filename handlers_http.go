@@ -5,6 +5,7 @@
 // Package main ...
 package main
 
+/**
 import (
 	"fmt"
 	"net/http"
@@ -33,3 +34,4 @@ func IndexHandler(w http.ResponseWriter, req *http.Request) {
 		"Title": fmt.Sprintf("Request Slack Invitation | %s", slackinvite.Name()),
 	})
 }
+**/
