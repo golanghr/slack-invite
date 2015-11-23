@@ -16,7 +16,7 @@ they are available. Readme on how to access gRPC as REST will be provided soon.
 
 ### Demo?
 
-You can see it here [slack.golang.hr]
+Can be seen at [slack.golang.hr]
 
 ### Installing Service
 
