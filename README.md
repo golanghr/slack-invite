@@ -5,20 +5,22 @@
 
 # [Golang.hr] Slack Invite
 
-[Golang.hr Slack Invite] is a small automation service written on top of [Golang.hr Platform].
+[Golang.hr Slack Invite] is a small [slack] automated invitation service written on top of [Golang.hr Platform].
 
 Point of the service is for you to be able quickly setup and run [slack] invitation system
 that will send out invitation email to the customer if he's not already registered under
 your team.
 
+Service supports both REST, gRPC and HTTP endpoint. REST and gRPC are here mainly to help out with frontend but never the less,
+they are available. Readme on how to access gRPC as REST will be provided soon.
+
 ### Demo?
 
-Well that's easy :) You can see it here [slack.golang.hr]
+You can see it here [slack.golang.hr]
 
 ### Installing Service
 
-We've wrote down installation guide that you can find at [Golang.hr Slack Invite Installation Guide]
-
+Installation guide can bee seen at [Golang.hr Slack Invite Installation Guide]
 
 ### License
 
