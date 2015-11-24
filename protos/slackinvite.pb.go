@@ -9,8 +9,9 @@ It is generated from these files:
 	protos/slackinvite.proto
 
 It has these top-level messages:
-	SlackInviteRequest
-	SlackInvite
+	Request
+	Stats
+	Invite
 */
 package slackinvite
 
@@ -29,27 +30,41 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-type SlackInviteRequest struct {
+type Request struct {
+	// Slack Invite related fields
+	FirstName string `protobuf:"bytes,1,opt,name=FirstName" json:"FirstName,omitempty"`
+	LastName  string `protobuf:"bytes,2,opt,name=LastName" json:"LastName,omitempty"`
+	Email     string `protobuf:"bytes,3,opt,name=Email" json:"Email,omitempty"`
 }
 
-func (m *SlackInviteRequest) Reset()         { *m = SlackInviteRequest{} }
-func (m *SlackInviteRequest) String() string { return proto.CompactTextString(m) }
-func (*SlackInviteRequest) ProtoMessage()    {}
+func (m *Request) Reset()         { *m = Request{} }
+func (m *Request) String() string { return proto.CompactTextString(m) }
+func (*Request) ProtoMessage()    {}
 
-type SlackInvite struct {
+type Stats struct {
 	Active []string `protobuf:"bytes,1,rep,name=Active" json:"Active,omitempty"`
 	Away   []string `protobuf:"bytes,2,rep,name=Away" json:"Away,omitempty"`
 	Admins []string `protobuf:"bytes,3,rep,name=Admins" json:"Admins,omitempty"`
 	Total  int64    `protobuf:"varint,4,opt,name=Total" json:"Total,omitempty"`
 }
 
-func (m *SlackInvite) Reset()         { *m = SlackInvite{} }
-func (m *SlackInvite) String() string { return proto.CompactTextString(m) }
-func (*SlackInvite) ProtoMessage()    {}
+func (m *Stats) Reset()         { *m = Stats{} }
+func (m *Stats) String() string { return proto.CompactTextString(m) }
+func (*Stats) ProtoMessage()    {}
+
+type Invite struct {
+	Ok    bool   `protobuf:"varint,1,opt,name=Ok" json:"Ok,omitempty"`
+	Error string `protobuf:"bytes,2,opt,name=Error" json:"Error,omitempty"`
+}
+
+func (m *Invite) Reset()         { *m = Invite{} }
+func (m *Invite) String() string { return proto.CompactTextString(m) }
+func (*Invite) ProtoMessage()    {}
 
 func init() {
-	proto.RegisterType((*SlackInviteRequest)(nil), "slackinvite.SlackInviteRequest")
-	proto.RegisterType((*SlackInvite)(nil), "slackinvite.SlackInvite")
+	proto.RegisterType((*Request)(nil), "slackinvite.Request")
+	proto.RegisterType((*Stats)(nil), "slackinvite.Stats")
+	proto.RegisterType((*Invite)(nil), "slackinvite.Invite")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -59,7 +74,8 @@ var _ grpc.ClientConn
 // Client API for Slack service
 
 type SlackClient interface {
-	TeamDetails(ctx context.Context, in *SlackInviteRequest, opts ...grpc.CallOption) (*SlackInvite, error)
+	Stats(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Stats, error)
+	Invite(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Invite, error)
 }
 
 type slackClient struct {
@@ -70,9 +86,18 @@ func NewSlackClient(cc *grpc.ClientConn) SlackClient {
 	return &slackClient{cc}
 }
 
-func (c *slackClient) TeamDetails(ctx context.Context, in *SlackInviteRequest, opts ...grpc.CallOption) (*SlackInvite, error) {
-	out := new(SlackInvite)
-	err := grpc.Invoke(ctx, "/slackinvite.Slack/TeamDetails", in, out, c.cc, opts...)
+func (c *slackClient) Stats(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Stats, error) {
+	out := new(Stats)
+	err := grpc.Invoke(ctx, "/slackinvite.Slack/Stats", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *slackClient) Invite(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Invite, error) {
+	out := new(Invite)
+	err := grpc.Invoke(ctx, "/slackinvite.Slack/Invite", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -82,19 +107,32 @@ func (c *slackClient) TeamDetails(ctx context.Context, in *SlackInviteRequest, o
 // Server API for Slack service
 
 type SlackServer interface {
-	TeamDetails(context.Context, *SlackInviteRequest) (*SlackInvite, error)
+	Stats(context.Context, *Request) (*Stats, error)
+	Invite(context.Context, *Request) (*Invite, error)
 }
 
 func RegisterSlackServer(s *grpc.Server, srv SlackServer) {
 	s.RegisterService(&_Slack_serviceDesc, srv)
 }
 
-func _Slack_TeamDetails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
-	in := new(SlackInviteRequest)
+func _Slack_Stats_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
+	in := new(Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
-	out, err := srv.(SlackServer).TeamDetails(ctx, in)
+	out, err := srv.(SlackServer).Stats(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func _Slack_Invite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
+	in := new(Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	out, err := srv.(SlackServer).Invite(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -106,8 +144,12 @@ var _Slack_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*SlackServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "TeamDetails",
-			Handler:    _Slack_TeamDetails_Handler,
+			MethodName: "Stats",
+			Handler:    _Slack_Stats_Handler,
+		},
+		{
+			MethodName: "Invite",
+			Handler:    _Slack_Invite_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{},

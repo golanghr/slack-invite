@@ -12,8 +12,16 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/golanghr/platform/options"
 	"github.com/golanghr/platform/utils"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 
+	pb "github.com/golanghr/slack-invite/protos"
 	. "github.com/smartystreets/goconvey/convey"
+)
+
+var (
+	alreadyInTeamEmail = "nevio.vesic@gmail.com"
 )
 
 func getSlackOptions() (options.Options, error) {
@@ -32,8 +40,9 @@ func getSlackOptions() (options.Options, error) {
 		"grpc-tls-domain":                utils.GetFromEnvOr("SLACK_SERVICE_GRPC_TLS_DOMAIN", "golang.hr"),
 		"http-addr":                      utils.GetFromEnvOr("SLACK_SERVICE_HTTP_ADDR", ":8500"),
 		"http-listen-forever":            getBool(utils.GetFromEnvOr("SLACK_SERVICE_HTTP_LISTEN_FOREVER", "true")),
+		"slack-team-name":                utils.GetFromEnvOr("SLACK_TEAM_NAME", "golanghr"),
 		"slack-token":                    utils.GetFromEnvOr("SLACK_TOKEN", ""),
-		"slack-api-debug":                getBool(utils.GetFromEnvOr("SLACK_API_DEBUG", "true")),
+		"slack-api-debug":                getBool(utils.GetFromEnvOr("SLACK_API_DEBUG", "false")),
 	})
 }
 
@@ -51,7 +60,7 @@ func TestSlackInviteService(t *testing.T) {
 	})
 }
 
-func TestSlackInvitePb(t *testing.T) {
+func TestStatsPb(t *testing.T) {
 	opts, _ := getSlackOptions()
 
 	// We gotta update these as there are multiple tests spawning out multiple listeners
@@ -66,9 +75,85 @@ func TestSlackInvitePb(t *testing.T) {
 	})
 
 	Convey("Test Fucking protobuff", t, func() {
-		pb, err := service.Slack.GetSlackInvitePb()
+		pb, err := service.Slack.GetStatsPb()
 		So(err, ShouldBeNil)
 
 		fmt.Printf("Pb response: %q \n", pb)
+	})
+}
+
+func TestInviteEndpoint(t *testing.T) {
+	opts, _ := getSlackOptions()
+
+	// We gotta update these as there are multiple tests spawning out multiple listeners
+	opts.Set("http-addr", ":8502")
+	opts.Set("grpc-addr", ":4774")
+
+	service, err := getSlackService(opts)
+
+	Convey("Should be service without any errors", t, func() {
+		So(service, ShouldHaveSameTypeAs, &Service{})
+		So(err, ShouldBeNil)
+	})
+
+	go func() { service.Start() }()
+	defer service.Terminate()
+	address, _ := service.Options.Get("grpc-addr")
+
+	var gopts []grpc.DialOption
+
+	var creds credentials.TransportAuthenticator
+	domain, _ := opts.Get("grpc-tls-domain")
+	creds, _ = credentials.NewClientTLSFromFile("test_data/server.crt", domain.String())
+	gopts = append(gopts, grpc.WithTransportCredentials(creds))
+
+	Convey("By passing invalid first name we get error that one must be set", t, func() {
+		conn, err := grpc.Dial(address.String(), gopts...)
+		So(err, ShouldBeNil)
+		defer conn.Close()
+
+		client := pb.NewSlackClient(conn)
+
+		_, err = client.Invite(context.Background(), &pb.Request{})
+		So(err.Error(), ShouldContainSubstring, "First name must be provided in order")
+	})
+
+	Convey("By passing invalid last name we get error that one must be provided", t, func() {
+		conn, err := grpc.Dial(address.String(), gopts...)
+		So(err, ShouldBeNil)
+		defer conn.Close()
+
+		client := pb.NewSlackClient(conn)
+
+		_, err = client.Invite(context.Background(), &pb.Request{FirstName: "Test"})
+		So(err.Error(), ShouldContainSubstring, "Last name must be provided in order")
+	})
+
+	Convey("By passing invalid email we get error that one must be set", t, func() {
+		conn, err := grpc.Dial(address.String(), gopts...)
+		So(err, ShouldBeNil)
+		defer conn.Close()
+
+		client := pb.NewSlackClient(conn)
+
+		_, err = client.Invite(context.Background(), &pb.Request{FirstName: "Test", LastName: "Testing"})
+		So(err.Error(), ShouldContainSubstring, "Valid email must be provided")
+
+		_, err = client.Invite(context.Background(), &pb.Request{FirstName: "Test", LastName: "Testing", Email: "iamnotvalid"})
+		So(err.Error(), ShouldContainSubstring, "Valid email must be provided")
+	})
+
+	Convey("By passing already invited email we get already invited error", t, func() {
+		conn, err := grpc.Dial(address.String(), gopts...)
+		So(err, ShouldBeNil)
+		defer conn.Close()
+
+		client := pb.NewSlackClient(conn)
+
+		_, err = client.Invite(context.Background(), &pb.Request{FirstName: "Test", LastName: "Testing"})
+		So(err.Error(), ShouldContainSubstring, "Valid email must be provided")
+
+		_, err = client.Invite(context.Background(), &pb.Request{FirstName: "Test", LastName: "Testing", Email: alreadyInTeamEmail})
+		So(err.Error(), ShouldContainSubstring, "Failed to invite to team: already_in_team")
 	})
 }

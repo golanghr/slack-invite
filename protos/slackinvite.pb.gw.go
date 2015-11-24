@@ -29,10 +29,32 @@ var _ = runtime.String
 var _ = json.Marshal
 var _ = utilities.PascalFromSnake
 
-func request_Slack_TeamDetails_0(ctx context.Context, client SlackClient, req *http.Request, pathParams map[string]string) (proto.Message, error) {
-	var protoReq SlackInviteRequest
+var (
+	filter_Slack_Stats_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+)
 
-	return client.TeamDetails(ctx, &protoReq)
+func request_Slack_Stats_0(ctx context.Context, client SlackClient, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq Request
+
+	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_Slack_Stats_0); err != nil {
+		return nil, grpc.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	return client.Stats(ctx, &protoReq)
+}
+
+var (
+	filter_Slack_Invite_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+)
+
+func request_Slack_Invite_0(ctx context.Context, client SlackClient, req *http.Request, pathParams map[string]string) (proto.Message, error) {
+	var protoReq Request
+
+	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_Slack_Invite_0); err != nil {
+		return nil, grpc.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	return client.Invite(ctx, &protoReq)
 }
 
 // RegisterSlackHandlerFromEndpoint is same as RegisterSlackHandler but
@@ -65,14 +87,25 @@ func RegisterSlackHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux
 func RegisterSlackHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
 	client := NewSlackClient(conn)
 
-	mux.Handle("GET", pattern_Slack_TeamDetails_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		resp, err := request_Slack_TeamDetails_0(runtime.AnnotateContext(ctx, req), client, req, pathParams)
+	mux.Handle("GET", pattern_Slack_Stats_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		resp, err := request_Slack_Stats_0(runtime.AnnotateContext(ctx, req), client, req, pathParams)
 		if err != nil {
 			runtime.HTTPError(ctx, w, err)
 			return
 		}
 
-		forward_Slack_TeamDetails_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_Slack_Stats_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_Slack_Invite_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		resp, err := request_Slack_Invite_0(runtime.AnnotateContext(ctx, req), client, req, pathParams)
+		if err != nil {
+			runtime.HTTPError(ctx, w, err)
+			return
+		}
+
+		forward_Slack_Invite_0(ctx, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -80,9 +113,13 @@ func RegisterSlackHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc
 }
 
 var (
-	pattern_Slack_TeamDetails_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "team", "details"}, ""))
+	pattern_Slack_Stats_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "slack", "stats"}, ""))
+
+	pattern_Slack_Invite_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "slack", "invite"}, ""))
 )
 
 var (
-	forward_Slack_TeamDetails_0 = runtime.ForwardResponseMessage
+	forward_Slack_Stats_0 = runtime.ForwardResponseMessage
+
+	forward_Slack_Invite_0 = runtime.ForwardResponseMessage
 )

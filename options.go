@@ -47,8 +47,9 @@ var (
 		"grpc-tls-domain":                utils.GetFromEnvOr("SLACK_SERVICE_GRPC_TLS_DOMAIN", "golang.hr"),
 		"http-addr":                      utils.GetFromEnvOr("SLACK_SERVICE_HTTP_ADDR", ":8500"),
 		"http-listen-forever":            getBool(utils.GetFromEnvOr("SLACK_SERVICE_HTTP_LISTEN_FOREVER", "true")),
+		"slack-team-name":                utils.GetFromEnvOr("SLACK_TEAM_NAME", "golanghr"),
 		"slack-token":                    utils.GetFromEnvOr("SLACK_TOKEN", ""),
-		"slack-api-debug":                getBool(utils.GetFromEnvOr("SLACK_API_DEBUG", "true")),
+		"slack-api-debug":                getBool(utils.GetFromEnvOr("SLACK_API_DEBUG", "false")),
 	}
 )
 

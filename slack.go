@@ -27,61 +27,54 @@ SOFTWARE.
 package main
 
 import (
+	"strconv"
+
 	"github.com/golanghr/slack"
 	pb "github.com/golanghr/slack-invite/protos"
 )
 
-/**
-type Team struct {
-	Ok bool
-}
-**/
-
-// Slack - Just small wrapper on top of existing slack api.
+// Slack - Just small wrapper on top of existing slack api to help us with protobuff
+// rendering. Additionally, it's here if we need to implement more out of slack api that is not
+// available under existing slack.Client
 type Slack struct {
 	*slack.Client
 
 	Token string
 	Debug bool
-
-	Users []slack.User
 }
 
-// GetSlackInvitePb -
-func (s *Slack) GetSlackInvitePb() (*pb.SlackInvite, error) {
-	var err error
+// GetStatsPb - Will return back stats protobuff that is necessary for both grpc,
+// REST API and HTML templating
+func (s *Slack) GetStatsPb() (*pb.Stats, error) {
+	users, err := s.GetUsers("1")
 
-	if s.Users, err = s.GetUsers("1"); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
-	active := []string{}
-	away := []string{}
-	admins := []string{}
+	stats := &pb.Stats{
+		Active: []string{},
+		Away:   []string{},
+		Admins: []string{},
+		Total:  int64(len(users)),
+	}
 
-	for _, user := range s.Users {
-		if user.Presence == "active" {
-			active = append(active, user.RealName)
-		}
-
-		if user.Presence == "away" {
-			away = append(away, user.RealName)
+	for _, user := range users {
+		if user.Presence == "active" && user.RealName != "" {
+			stats.Active = append(stats.Active, strconv.QuoteToASCII(user.RealName))
+		} else if user.Presence == "away" && user.RealName != "" {
+			stats.Away = append(stats.Away, strconv.QuoteToASCII(user.RealName))
 		}
 
 		if user.IsAdmin {
-			admins = append(admins, user.RealName)
+			stats.Admins = append(stats.Admins, user.RealName)
 		}
 	}
 
-	return &pb.SlackInvite{
-		Active: active,
-		Away:   away,
-		Admins: admins,
-		Total:  int64(len(s.Users)),
-	}, nil
+	return stats, nil
 }
 
-// NewSlack -
+// NewSlack - Will return back new Slack that will be later on used by the Service{}
 func NewSlack(token string, debug bool) *Slack {
 
 	api := slack.New(token)

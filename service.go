@@ -88,10 +88,16 @@ func NewService(opts options.Options, logger *logging.Entry) (*Service, error) {
 		return nil, err
 	}
 
+	_, ok := opts.Get("slack-team-name")
+
+	if !ok {
+		return nil, errors.New("You need to provide `slack-team-name` in order to start service...")
+	}
+
 	slackToken, ok := opts.Get("slack-token")
 
 	if !ok {
-		return nil, errors.New("You need to provide slack token in order to start service...")
+		return nil, errors.New("You need to provide `slack-token` in order to start service...")
 	}
 
 	slackApiDebug, ok := opts.Get("slack-api-debug")

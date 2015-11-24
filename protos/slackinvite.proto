@@ -4,20 +4,35 @@ package slackinvite;
 
 import "github.com/gengo/grpc-gateway/third_party/googleapis/google/api/annotations.proto";
 
-message SlackInviteRequest {
+message Request {
+  // Slack Invite related fields
+  string FirstName = 1;
+  string LastName = 2;
+  string Email = 3;
 }
 
-message SlackInvite {
+message Stats {
   repeated string Active = 1;
   repeated string Away = 2;
   repeated string Admins = 3;
   int64 Total = 4;
 }
 
+message Invite {
+  bool Ok = 1;
+  string Error = 2;
+}
+
 service Slack {
-  rpc TeamDetails (slackinvite.SlackInviteRequest) returns (slackinvite.SlackInvite) {
+  rpc Stats (slackinvite.Request) returns (slackinvite.Stats) {
     option (google.api.http) = {
-      get: "/v1/team/details"
+      get: "/v1/slack/stats"
+    };
+  }
+
+  rpc Invite (slackinvite.Request) returns (slackinvite.Invite) {
+    option (google.api.http) = {
+      get: "/v1/slack/invite"
     };
   }
 }

@@ -23,17 +23,59 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-// Package main ...
 package main
 
 import (
+	"errors"
+	"regexp"
+
 	pb "github.com/golanghr/slack-invite/protos"
 	"golang.org/x/net/context"
 )
 
-// TeamDetails - Depending on server type (http, grpc, ...) will return back new simple response.
-// If this is HTTP, it will return back application/json with HelloWorld being serialized into json
-// If this is GRPC, it will return back entire hello.HelloWorld as bytes
-func (s *Service) TeamDetails(ctx context.Context, in *pb.SlackInviteRequest) (*pb.SlackInvite, error) {
-	return &pb.SlackInvite{}, nil
+// Stats - HTTP(REST API) and gRPC endpoint designed to be used if we ever choose to go with
+// full javascript on the index page. I had no will to implement that from the start but is ongoing idea.
+// In case that there are issues with validation we will return error
+func (s *Service) Stats(ctx context.Context, in *pb.Request) (*pb.Stats, error) {
+	s.Entry.Debugf("Received new stats request: %v", in)
+
+	stats, err := s.Slack.GetStatsPb()
+
+	if err != nil {
+		s.Entry.Errorf("Failed to retreive stats from slack: %s", err)
+	}
+
+	return stats, err
+}
+
+// Invite - HTTP(REST API) and gRPC endpoint designed to invite new member to the team.
+// In case that there are issues with validation we will return error
+//
+// Example Responses
+//  {"error":"rpc error: code = 2 desc = \"Failed to invite to team: already_in_team\""}
+//  or
+//  {"Ok":true}
+func (s *Service) Invite(ctx context.Context, in *pb.Request) (*pb.Invite, error) {
+	s.Entry.Debugf("Received new invite request: %v", in)
+
+	if len(in.FirstName) < 2 {
+		return nil, errors.New("First name must be provided in order to send new invite.")
+	}
+
+	if len(in.LastName) < 2 {
+		return nil, errors.New("Last name must be provided in order to send new invite.")
+	}
+
+	ere := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
+	if !ere.MatchString(in.Email) {
+		return nil, errors.New("Valid email must be provided in order to send new invite.")
+	}
+
+	teamName, _ := s.Options.Get("slack-team-name")
+
+	if err := s.InviteToTeam(teamName.String(), in.FirstName, in.LastName, in.Email); err != nil {
+		return nil, err
+	}
+
+	return &pb.Invite{Ok: true}, nil
 }
