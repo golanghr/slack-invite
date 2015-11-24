@@ -27,5 +27,5 @@ ENV SLACK_SERVICE_HTTP_LISTEN_FOREVER "true"
 EXPOSE 4772
 EXPOSE 8500
 
-ADD build/slack-invite /usr/bin/slack-invite
-ENTRYPOINT ["slack-invite"]
+ADD build/platform-slack-invite /usr/bin/platform-slack-invite
+ENTRYPOINT ["platform-slack-invite"]
