@@ -10,8 +10,8 @@ PLATFORMPROTOPATH = $(GOPATH)/src
 GOOGLEAPIPATH = $(GOPATH)/src/github.com/gengo/grpc-gateway/third_party/googleapis
 PROTOS = protos/*.proto
 
-DOCKER_REGISTRY = 104.131.75.69:5000
-DOCKER_IMAGE_NAME = platform-examples-hello
+DOCKER_REGISTRY = docker-registry-addr:ip
+DOCKER_IMAGE_NAME = platform-slack-invite
 BUILD_NUMBER = 2
 
 all: proto
