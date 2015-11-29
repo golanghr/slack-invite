@@ -16,17 +16,16 @@ When [filing an issue], make sure to answer these five questions:
 General questions should go to the [Golang.hr Slack] or [Golang.hr Facebook] instead of the issue tracker.
 The gophers there will answer or ask you to file an issue if you've tripped over a bug.
 
-## Sign Your Work
-
-The sign-off is a simple line at the end of the explanation for the patch.
-Your signature certifies that you wrote the patch or otherwise have the right to pass it on as an open-source patch.
-The rules are pretty simple: if you can certify the below (from [developercertificate.org]):
-
 ## Write Clear, Idiomatic Code
 
 Please read, before you do **ANY** coding what so ever both [Effective Go] as [Code Review Comments].
 Any code concept that is not in sync with it will be rejected.
 
+## Sign Your Work
+
+The sign-off is a simple line at the end of the explanation for the patch.
+Your signature certifies that you wrote the patch or otherwise have the right to pass it on as an open-source patch.
+The rules are pretty simple: if you can certify the below (from [developercertificate.org]):
 
 ```
 Developer Certificate of Origin

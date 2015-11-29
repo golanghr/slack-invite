@@ -25,6 +25,11 @@ Can be seen at [slack.golang.hr]
 
 Installation guide can bee seen at [Golang.hr Slack Invite Installation Guide]
 
+### Contributions
+
+Please make sure to read [Golang.hr Slack Invite Contribution Guide] if you are interested into
+doing some code contributions :)
+
 ### License
 
 ```
@@ -54,6 +59,7 @@ SOFTWARE.
 [Golang.hr]: <https://github.com/golanghr>
 [Golang.hr Slack Invite]: <https://github.com/golanghr/slack-invite>
 [Golang.hr Slack Invite Installation Guide]: <https://github.com/golanghr/slack-invite/blob/master/INSTALL.md>
+[Golang.hr Slack Invite Contribution Guide]: <https://github.com/golanghr/slack-invite/blob/master/CONTRIBUTING.md>
 [Golang.hr Platform]: <https://github.com/golanghr/platform>
 [filing an issue]: <https://github.com/golanghr/slack-invite/issues/new>
 
