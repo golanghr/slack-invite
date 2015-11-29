@@ -28,6 +28,7 @@ package main
 
 import (
 	"errors"
+	"net/http"
 	"syscall"
 
 	"github.com/golanghr/platform/handlers"
@@ -55,6 +56,9 @@ type Service struct {
 	// HTTP - Here HTTP server is located.
 	HTTP servers.Serverer
 
+	// REST -
+	REST servers.Serverer
+
 	// Managerer - Service runtime manager. Manager actually contains start, stop
 	// and all of the runtime related management handlers.
 	managers.Managerer
@@ -66,11 +70,21 @@ type Service struct {
 	*Slack
 }
 
-// GrpcServer - Will return back actual grpc.Server
+// GrpcServer - Will return back actual servers.Grpc
 // I understand that this looks like a hack but I'd rather have it require to satisfy interface
 // than having it require to satisfy nil.
 func (s *Service) GrpcServer() *grpc.Server {
 	return s.Grpc.Interface().(*servers.Grpc).Server
+}
+
+// HTTPServer - Will return back actual servers.HTTP
+func (s *Service) HTTPServer() *servers.HTTP {
+	return s.HTTP.Interface().(*servers.HTTP)
+}
+
+// RESTServer - Will return back actual servers.GrpcRest used for JSON REST API
+func (s *Service) RESTServer() *servers.GrpcRest {
+	return s.REST.Interface().(*servers.GrpcRest)
 }
 
 // Terminate - Will send SIGTERM towards service interrupt signal resulting entire
@@ -100,13 +114,19 @@ func NewService(opts options.Options, logger *logging.Entry) (*Service, error) {
 		return nil, errors.New("You need to provide `slack-token` in order to start service...")
 	}
 
-	slackApiDebug, ok := opts.Get("slack-api-debug")
+	slackDebug, ok := opts.Get("slack-api-debug")
 
 	if !ok {
 		return nil, errors.New("You need to provide `slack-api-debug` in order to start service...")
 	}
 
 	grpcServer, err := servers.NewGrpcServer(serv, opts, logger)
+
+	if err != nil {
+		return nil, err
+	}
+
+	restServer, err := servers.NewGrpcRestServer(serv, opts, logger)
 
 	if err != nil {
 		return nil, err
@@ -130,6 +150,11 @@ func NewService(opts options.Options, logger *logging.Entry) (*Service, error) {
 	}
 
 	// We are about to attach HTTP service now ...
+	if err := serviceManager.Attach("rest", restServer); err != nil {
+		return nil, err
+	}
+
+	// We are about to attach HTTP service now ...
 	if err := serviceManager.Attach("http", httpServer); err != nil {
 		return nil, err
 	}
@@ -139,19 +164,26 @@ func NewService(opts options.Options, logger *logging.Entry) (*Service, error) {
 		Servicer:  serv,
 		Grpc:      grpcServer,
 		HTTP:      httpServer,
+		REST:      restServer,
 		Entry:     logger,
 		Managerer: serviceManager,
-		Slack:     NewSlack(slackToken.String(), slackApiDebug.Bool()),
+		Slack:     NewSlack(slackToken.String(), slackDebug.Bool()),
 	}
 
 	pb.RegisterSlackServer(sc.GrpcServer(), sc)
 
-	hander, err := handlers.NewHttpGrpcHandler(serv, logger, pb.RegisterSlackHandler)
+	handler, err := handlers.NewHttpGrpcHandler(serv, logger, pb.RegisterSlackHandler)
 
 	if err != nil {
 		return nil, err
 	}
 
-	httpServer.Interface().(*servers.HTTP).Handler = hander
+	muxhandler := http.NewServeMux()
+
+	muxhandler.HandleFunc("/", IndexHandler)
+
+	sc.RESTServer().SetHandler("/", handler)
+	sc.HTTPServer().SetHandler("/", muxhandler)
+
 	return sc, nil
 }

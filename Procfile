@@ -1,1 +1,1 @@
-slackinvite: bin/slack-invite
+slackinvite: build/platform-slack-invite
