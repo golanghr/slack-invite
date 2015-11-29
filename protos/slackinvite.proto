@@ -26,13 +26,13 @@ message Invite {
 service Slack {
   rpc Stats (slackinvite.Request) returns (slackinvite.Stats) {
     option (google.api.http) = {
-      get: "/v1/slack/stats"
+      get: "/slack/stats"
     };
   }
 
   rpc Invite (slackinvite.Request) returns (slackinvite.Invite) {
     option (google.api.http) = {
-      get: "/v1/slack/invite"
+      get: "/slack/invite"
     };
   }
 }

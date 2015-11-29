@@ -22,6 +22,12 @@ The sign-off is a simple line at the end of the explanation for the patch.
 Your signature certifies that you wrote the patch or otherwise have the right to pass it on as an open-source patch.
 The rules are pretty simple: if you can certify the below (from [developercertificate.org]):
 
+## Write Clear, Idiomatic Code
+
+Please read, before you do **ANY** coding what so ever both [Effective Go] as [Code Review Comments].
+Any code concept that is not in sync with it will be rejected.
+
+
 ```
 Developer Certificate of Origin
 Version 1.1
@@ -86,3 +92,6 @@ the MIT-style license found in the LICENSE file.
 [Golang.hr Slack]: <http://slack.golang.hr>
 [Golang.hr Facebook]: <https://www.facebook.com/groups/golanghr/>
 [developercertificate.org]: <http://developercertificate.org>
+
+[Effective Go]: <https://golang.org/doc/effective_go.html>
+[Code Review Comments]: <https://github.com/golang/go/wiki/CodeReviewComments>

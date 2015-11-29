@@ -113,9 +113,9 @@ func RegisterSlackHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc
 }
 
 var (
-	pattern_Slack_Stats_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "slack", "stats"}, ""))
+	pattern_Slack_Stats_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"slack", "stats"}, ""))
 
-	pattern_Slack_Invite_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "slack", "invite"}, ""))
+	pattern_Slack_Invite_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"slack", "invite"}, ""))
 )
 
 var (
