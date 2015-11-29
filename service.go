@@ -28,10 +28,8 @@ package main
 
 import (
 	"errors"
-	"net/http"
 	"syscall"
 
-	"github.com/golanghr/platform/handlers"
 	"github.com/golanghr/platform/logging"
 	"github.com/golanghr/platform/managers"
 	"github.com/golanghr/platform/options"
@@ -171,19 +169,6 @@ func NewService(opts options.Options, logger *logging.Entry) (*Service, error) {
 	}
 
 	pb.RegisterSlackServer(sc.GrpcServer(), sc)
-
-	handler, err := handlers.NewHttpGrpcHandler(serv, logger, pb.RegisterSlackHandler)
-
-	if err != nil {
-		return nil, err
-	}
-
-	muxhandler := http.NewServeMux()
-
-	muxhandler.HandleFunc("/", IndexHandler)
-
-	sc.RESTServer().SetHandler("/", handler)
-	sc.HTTPServer().SetHandler("/", muxhandler)
 
 	return sc, nil
 }

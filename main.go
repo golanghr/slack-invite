@@ -27,27 +27,45 @@ SOFTWARE.
 package main
 
 import (
+	"net/http"
+
+	pb "github.com/golanghr/slack-invite/protos"
+
+	"github.com/golanghr/platform/handlers"
 	"github.com/golanghr/platform/logging"
 	"github.com/golanghr/platform/options"
 )
 
 var (
-	log    logging.Logging
-	logger *logging.Entry
-	srv    *Service
-	opts   options.Options
+	log         logging.Logging
+	logger      *logging.Entry
+	slackinvite *Service
+	opts        options.Options
 )
 
 func main() {
 	logger.Info("Starting service ...")
 
-	srv, err := NewService(opts, logger)
+	slackinvite, err := NewService(opts, logger)
 
 	if err != nil {
 		logger.Fatalf("Could not create service. (err: %s)", err)
 	}
 
-	if err := srv.Start(); err != nil {
+	resthandler, err := handlers.NewHttpGrpcHandler(slackinvite, logger, pb.RegisterSlackHandler)
+
+	if err != nil {
+		logger.Fatalf("Could not create new grpc handler (err: %s)", err)
+	}
+
+	httphandler := http.NewServeMux()
+	httphandler.HandleFunc("/", IndexHandler)
+	httphandler.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
+
+	slackinvite.RESTServer().SetHandler("/", resthandler)
+	slackinvite.HTTPServer().SetHandler("/", httphandler)
+
+	if err := slackinvite.Start(); err != nil {
 		logger.Fatalf("Failed to start service. (err: %s)", err)
 	}
 }
