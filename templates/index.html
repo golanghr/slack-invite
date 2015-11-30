@@ -1,7 +1,7 @@
-{{define "title"}}A templated page{{end}}
+[[define "title"]]A templated page[[end]]
 
-{{define "context"}}
-<section ng-controller="IndexCtrl as index">
-  <h1>Hello</h1>
+[[define "context"]]
+<section ng-controller="IndexCtrl">
+  <h1>Hello {{total_members}}</h1>
 </section>
-{{end}}
+[[end]]

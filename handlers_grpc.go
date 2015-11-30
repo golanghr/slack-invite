@@ -39,6 +39,8 @@ import (
 func (s *Service) Stats(ctx context.Context, in *pb.Request) (*pb.Stats, error) {
 	s.Entry.Debugf("Received new stats request: %v", in)
 
+	s.Entry.Debugf("Contex is: %q", ctx)
+
 	stats, err := s.Slack.GetStatsPb()
 
 	if err != nil {

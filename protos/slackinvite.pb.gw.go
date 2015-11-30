@@ -88,6 +88,12 @@ func RegisterSlackHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc
 	client := NewSlackClient(conn)
 
 	mux.Handle("GET", pattern_Slack_Stats_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers",
+			"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
+		)
+
 		resp, err := request_Slack_Stats_0(runtime.AnnotateContext(ctx, req), client, req, pathParams)
 		if err != nil {
 			runtime.HTTPError(ctx, w, err)
@@ -99,6 +105,12 @@ func RegisterSlackHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc
 	})
 
 	mux.Handle("GET", pattern_Slack_Invite_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers",
+			"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
+		)
+
 		resp, err := request_Slack_Invite_0(runtime.AnnotateContext(ctx, req), client, req, pathParams)
 		if err != nil {
 			runtime.HTTPError(ctx, w, err)

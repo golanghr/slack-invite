@@ -1,12 +1,11 @@
-{{define "layout"}}
+[[define "layout"]]
 <!DOCTYPE html>
 <html lang="en" ng-app="golanghr.slackinvite">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>{{template "title"}}</title>
+    <title>[[template "title"]]</title>
 
     <!-- Bootstrap -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'  type='text/css'>
@@ -19,7 +18,10 @@
     <script src="/public/components/angular/angular.min.js"></script>
     <script src="/public/components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="/public/components/ngprogress/build/ngprogress.min.js"></script>
+
     <script src="/public/service/app.js"></script>
+    <script src="/public/service/services.js"></script>
+    <script src="/public/service/controllers.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -29,10 +31,9 @@
     <![endif]-->
   </head>
   <body>
-
-    {{template "context"}}
-
-
+    <!-- -->
+    [[template "context"]]
+    <!-- -->
   </body>
 </html>
-{{end}}
+[[end]]

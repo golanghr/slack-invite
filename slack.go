@@ -76,7 +76,6 @@ func (s *Slack) GetStatsPb() (*pb.Stats, error) {
 
 // NewSlack - Will return back new Slack that will be later on used by the Service{}
 func NewSlack(token string, debug bool) *Slack {
-
 	api := slack.New(token)
 	api.SetDebug(debug)
 
