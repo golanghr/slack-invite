@@ -1,44 +1,47 @@
 body {
     font-family: 'Open Sans', sans-serif;
-    background-color: #EEEEEE;
+    background-color: #ECF0F1;
+    background-image: url('/public/images/slack.png');
+    background-position: right -200px;
+    background-repeat: no-repeat;
+    height:100vh;
 }
 
-article {
-  height: 100vh;
-  padding:20px;
-  border:1px #ccc solid;
+header h1{
+  padding-top:30px;
+  font-size: 3.5em;
+  font-weight: 100 !important;
 }
 
-article h1{
-  font-size: 3em;
-  color: #333;
+header p{
+  font-size:1.1em;
 }
 
-article p.description {
-  font-size: 1.2em;
-  color: #333;
+section {
+  margin-top:100px;
 }
 
-article div.panel{
-  margin-top:20px;
+section h2 {
+  font-size: 2.5em;
+  font-weight: 100 !important;
+  margin-bottom:20px;
 }
 
-article div.panel .panel-body .fa{
-  float: left;
-  margin-top:10px;
-  margin-right:10px;
+.label-members {
+  margin-right:5px;
+  display: inline-block;
+  margin-bottom:5px;
 }
 
-article p.copyright{
-  clear:both;
-  display: block;
-  padding-top: 50px;
+footer {
+  position:absolute;
+  bottom:0;
+  background-color: #F2F1EF;
+  width:100vw;
+  padding-top:10px;
+  border-top:1px #dadada solid;
 }
 
-aside .row {
-  height: 100vh;
-  border-left: 3px #f1f1f1 solid !important;
-  padding:20px;
-
-  padding-top:10vh;
+footer p{
+  font-size:.8em;
 }

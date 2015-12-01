@@ -1,4 +1,4 @@
-angular.module('golanghr.slackinvite').controller('IndexCtrl', function ($rootScope, $scope, TeamInfo, ngProgressFactory) {
+angular.module('golanghr.slackinvite').controller('MainCtrl', function ($rootScope, $scope, TeamInfo, ngProgressFactory) {
   $scope.progressbar = ngProgressFactory.createInstance();
   $scope.progressbar.setColor('#02bbff');
 

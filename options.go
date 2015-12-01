@@ -52,6 +52,7 @@ var (
 		"slack-team-name":                utils.GetFromEnvOr("SLACK_TEAM_NAME", "golanghr"),
 		"slack-token":                    utils.GetFromEnvOr("SLACK_TOKEN", ""),
 		"slack-api-debug":                getBool(utils.GetFromEnvOr("SLACK_API_DEBUG", "false")),
+		"google-analytics-tracking-id":   utils.GetFromEnvOr("SLACK_GA_TRACKING_ID", ""),
 	}
 )
 

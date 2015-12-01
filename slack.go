@@ -27,8 +27,6 @@ SOFTWARE.
 package main
 
 import (
-	"strconv"
-
 	"github.com/golanghr/slack"
 	pb "github.com/golanghr/slack-invite/protos"
 )
@@ -61,9 +59,9 @@ func (s *Slack) GetStatsPb() (*pb.Stats, error) {
 
 	for _, user := range users {
 		if user.Presence == "active" && user.RealName != "" {
-			stats.Active = append(stats.Active, strconv.QuoteToASCII(user.RealName))
+			stats.Active = append(stats.Active, user.RealName)
 		} else if user.Presence == "away" && user.RealName != "" {
-			stats.Away = append(stats.Away, strconv.QuoteToASCII(user.RealName))
+			stats.Away = append(stats.Away, user.RealName)
 		}
 
 		if user.IsAdmin {
