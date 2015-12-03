@@ -82,7 +82,7 @@ func IndexHandler(rw http.ResponseWriter, req *http.Request) {
 
 	params := map[string]interface{}{
 		"title":   "Golang.hr automated slack invitation as easy as 1,2,3!",
-		"apihost": getRestAPIAddr(req.Host),
+		"apihost": "ghrslack-rest.ngrok.com",
 		"gaua":    gaua.String(),
 	}
 

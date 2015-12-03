@@ -8,7 +8,6 @@
     <title>[[.title]]</title>
 
     <!-- Bootstrap -->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'  type='text/css'>
     <link rel="stylesheet" href="/public/components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
@@ -18,10 +17,13 @@
     <script src="/public/components/angular/angular.min.js"></script>
     <script src="/public/components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="/public/components/ngprogress/build/ngprogress.min.js"></script>
+    <script src="/public/components/angular-animate/angular-animate.min.js"></script>
+    <script src="/public/components/angular-route/angular-route.min.js"></script>
 
     <script src="/public/service/app.js"></script>
     <script src="/public/service/services.js"></script>
     <script src="/public/service/controllers.js"></script>
+    <script src="/public/service/directives.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -30,11 +32,9 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script>
-      var api_host = "[[.apihost]]";
-    </script>
+    <script>var api_host = "[[.apihost]]";</script>
   </head>
-  <body>
+  <body ng-cloak>
     <!-- -->
     [[template "context"]]
     <!-- -->

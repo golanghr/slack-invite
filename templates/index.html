@@ -1,62 +1,73 @@
 [[define "context"]]
-<main class="container-fluid" ng-controller="MainCtrl">
+<main class="container-fluid" ng-controller="MainCtrl" ng-cloak>
 
-  <!--
-  1.) We need form that user can input first, last name and email address
-  2.) We need place where name and description of the slack team will reside
-  3.) We need place for statistics (admins, active, idle, total)
-  4.) We need footer + slack image.
-  5.) We need fork :)
-  -->
-
-  <header class="row">
-    <h1 class="col-md-12">Welcome to the <strong>golang.hr</strong> slack invitation service!</h1>
-    <p class="col-md-8">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
-  </header>
-
-  <section class="row">
-
-    <article class="col-md-8">
-      <h2>Request Slack Invitation</h2>
-      <p>Please enter your first and last name as email address in order to join Golang Hrvatska (Croatia) on slack! It's much of fun going on with us!</p>
-
-      <form class="form-inline" action="POST" enctype="application/x-www-form-urlencoded">
-        <div class="form-group">
-          <label for="first_name">First Name</label>
-          <input type="text" class="form-control" id="first_name" name="first_name" aria-describedby="first_name" placeholder="Jane">
-          <span class="glyphicon glyphicon-ok form-control-feedback hidden" aria-hidden="true"></span>
-          <span class="glyphicon glyphicon-remove form-control-feedback hidden" aria-hidden="true"></span>
-        </div>
-        <div class="form-group">
-          <label for="last_name">Last Name</label>
-          <input type="text" class="form-control" id="last_name" name="last_name" aria-describedby="last_name" placeholder="Doe">
-          <span class="glyphicon glyphicon-ok form-control-feedback hidden" aria-hidden="true"></span>
-          <span class="glyphicon glyphicon-remove form-control-feedback hidden" aria-hidden="true"></span>
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" class="form-control" id="email" name="email" aria-describedby="email" placeholder="jane.doe@example.com">
-          <span class="glyphicon glyphicon-ok form-control-feedback hidden" aria-hidden="true"></span>
-          <span class="glyphicon glyphicon-remove form-control-feedback hidden" aria-hidden="true"></span>
-        </div>
-        <button type="submit" class="btn btn-success">Send invitation</button>
-      </form>
-
-    </article>
-
-    <aside class="col-md-4">
-      <h2>Slack team <strong>fun facts</strong></h2>
-
-      <h4 class="well well-sm">There are <strong>{{total_members}}</strong> of us in total!</h4>
-      <h4 class="well well-sm">In this very moment active members <strong ng-repeat="member in active_members" class="label label-success label-members">{{member}}</strong></h4>
-      <h4 class="well well-sm">In this very moment idle members <strong ng-repeat="member in away_members" class="label label-warning label-members">{{member}}</strong></h4>
-      <h4 class="well well-sm">Administrators you can always reach for help <strong ng-repeat="member in admins" class="label label-warning label-danger">{{member}}</strong></h4>
-    </aside>
-
+  <section class="success animate-show" ng-show="invitationSuccess">
+    <i class="fa fa-5x fa-thumbs-up fa-circle fa-inverse"></i>
+    <h2>Invitation Successfully Sent Out!</h2>
+    <p>Hey <span class="label label-success">{{firstName}}</span>! Before you can access <strong>golang.hr slack</strong> you will need to go to your email client and accept invitation!</p>
+    <p>Seeya soon!</p>
   </section>
 
-  <footer class="row">
-    <p class="col-md-12">&copy; 2015 <a href="http://golang.hr" title="Golang Croatia / Golang Hrvatska" class="label label-danger">Golang.Hr</a>. Licensed under <a href="https://github.com/golanghr/slack-invite/blob/master/LICENSE" class="label label-primary">The MIT License</a>. Feel free to <a href="https://github.com/golanghr/slack-invite" title="Fork Golang.Hr Slack Invite" class="label label-default">for this repo</a>!</p>
+
+  <div id="background"></div>
+  <page-preloader></page-preloader>
+
+  <div ng-hide="invitationSuccess">
+
+    <header class="row animate-show" ng-show="pageLoaded">
+      <h1 class="col-md-12">Join <strong>golang.hr</strong> slack community!</h1>
+      <p class="col-md-12">
+        We're small but active community focused on building <strong>Go</strong> community in Croatia. Feel free to join us! We won't bite you :)<br />
+        We would like please you to <strong>read carefully</strong> <a href="https://golang.org/conduct" title="Golang Code of Conduct">Go Code of Conduct</a> before joining as
+        we are very serious about preserving common sense between community gophers.
+      </p>
+    </header>
+
+    <section class="row animate-show" ng-show="pageLoaded">
+
+      <article class="col-md-12">
+        <h2>Request Slack Invitation</h2>
+        <p>Please enter your first and last name as email address in order to join Golang Hrvatska (Croatia) on slack! It's much of fun going on with us!</p>
+
+        <form ng-submit="submit()" class="form-inline">
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" aria-describedby="first_name" placeholder="Jane" ng-model="firstName">
+            <span class="glyphicon glyphicon-ok form-control-feedback hidden" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-remove form-control-feedback hidden" aria-hidden="true"></span>
+          </div>
+          <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" aria-describedby="last_name" placeholder="Doe" ng-model="lastName">
+            <span class="glyphicon glyphicon-ok form-control-feedback hidden" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-remove form-control-feedback hidden" aria-hidden="true"></span>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" aria-describedby="email" placeholder="jane.doe@example.com" ng-model="emailAddress">
+            <span class="glyphicon glyphicon-ok form-control-feedback hidden" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-remove form-control-feedback hidden" aria-hidden="true"></span>
+          </div>
+          <button type="submit" class="btn btn-success">Send invitation</button>
+        </form>
+
+      </article>
+
+    </section>
+
+    <aside class="row" ng-show="pageLoaded && !invitationSucces">
+      <div class="col-md-12">
+        <h4 class="totals">There are <strong>{{total_members}}</strong> of us in total!</h4>
+        <h4 class="">Currently active members <strong ng-repeat="member in active_members" class="label label-success label-members">{{member}}</strong></h4>
+        <h4 class="">Currently idle members <strong ng-repeat="member in away_members" class="label label-warning label-members">{{member}}</strong></h4>
+        <h4 class="">Administrators you can always reach for help <strong ng-repeat="member in admins" class="label label-warning label-danger">{{member}}</strong></h4>
+      </div>
+    </aside>
+
+  </div>
+
+  <footer class="row animate-show">
+    <p class="col-md-12">&copy;2015 Built by <a href="http://golang.hr" title="Golang Croatia / Golang Hrvatska" class="label label-danger">Golang.Hr</a> Developers. Licensed under <a href="https://github.com/golanghr/slack-invite/blob/master/LICENSE" class="label label-primary">The MIT License</a>. Feel free to <a href="https://github.com/golanghr/slack-invite" title="Fork Golang.Hr Slack Invite" class="label label-default">fork this repo</a>!</p>
   </footer>
 </main>
 [[end]]
